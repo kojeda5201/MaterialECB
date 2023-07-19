@@ -1,0 +1,31 @@
+[
+  {
+    "nombre": "Kelvin",
+    "edad": 19,
+    "estadoCivil": "soltero",
+    "id": "171717",
+    "carros": [
+      {
+        "placa": "PBN123",
+        "recorrido": 0,
+        "numeroPuertas": 3,
+        "esNuevo": true,
+        "inicialPlaca": "P"
+      },
+      {
+        "placa": "PBN321",
+        "recorrido": 10,
+        "numeroPuertas": 4,
+        "esNuevo": false,
+        "inicialPlaca": "P"
+      },
+      {
+        "placa": "PBN456",
+        "recorrido": 1000,
+        "numeroPuertas": 7,
+        "esNuevo": false,
+        "inicialPlaca": "P"
+      }
+    ]
+  }
+]
