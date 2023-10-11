@@ -1,23 +1,43 @@
 import csv
 import subprocess
 import re
+import nmap
+from natsort import natsorted
 
+
+active_users_dict = {}
+def get_active_users():
+    active_users = []
+
+    nm = nmap.PortScanner()
+
+    try:
+
+        nm.scan(hosts="172.22.43.1-255", arguments="-sn")
+
+        for host in nm.all_hosts():
+            active_users_dict[host] = {"isFound": False}
+            active_users.append(host)
+    except Exception as e:
+        print("Error al ejecutar el escaneo:", e)
+
+    return active_users
+
+active_users_array = get_active_users()
 def ping_ip(ip):
     try:
         output = subprocess.check_output(["ping", "-n", "2", ip])
-        output_str = output.decode("utf-8", errors="replace")  # Decodificar la salida a una cadena con manejo de errores
-        match = re.search(r'\[(\d+\.\d+\.\d+\.\d+)\]', output_str)  # Buscar dirección IP entre corchetes
+        output_str = output.decode("utf-8", errors="replace")
+        match = re.search(r'\[(\d+\.\d+\.\d+\.\d+)\]', output_str)
 
         if "Host de destino inaccesible" in output_str:
             return "dest"
         elif match:
-            return match.group(1)  # Devolver la dirección IP capturada
+            return match.group(1)
         else:
             return 2
     except subprocess.CalledProcessError:
         return 3
-
-# option = int(input('Ingrese la opción de ip:\n1: ip\n2: usuario\n-> '))
 
 def format_unique_id(id_str):
     return ":".join(id_str[i:i+2] for i in range(0, len(id_str), 2))
@@ -74,7 +94,7 @@ with open('Documents\\Listadeequipos.csv', 'r') as csvfile:
         ip_to_user[ip].add(user)
 
 # print(ip_to_user)
-        
+
 resultado_ping = []
 resultado_innacesible = []
 resultado_innacesibleV2 = []
@@ -82,15 +102,22 @@ resultado_user = []
 resultado_guardar = []
 resultado_kas = []
 
+
+for user in active_users_array:
+    print(user)
+
+
 for user, ip, unique_id in ip_list:
     user = user.strip().lower()
-    user_found = False  # Inicializa una bandera para indicar si se encontró al usuario en algún conjunto
+    user_found_kasp = False  # Inicializa una bandera para indicar si se encontró al usuario en algún conjunto
     # print()s
+
+
     for users_set in ip_to_user.values():
         if user in users_set:
-            user_found = True
+            user_found_kasp = True
             break
-    if user_found:
+    if user_found_kasp:
 
         resultado = ping_ip(user)
         if resultado != 2 and resultado != 3:
